@@ -13,6 +13,8 @@ public class Turret : MonoBehaviour
     private float fireCountdown = 0f;
     public Transform firePoint;
     public GameObject bulletPrefab;
+    public Animator animator;
+    public ParticleSystem fireFX;
 
     void Start()
     {
@@ -68,7 +70,19 @@ public class Turret : MonoBehaviour
 
     void Shoot()
     {
-        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        animator.SetTrigger("Fire");
+        GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Bullet bullet = bulletGO.GetComponent<Bullet>();
+
+        if (bullet != null)
+        {
+            bullet.Seek(target);
+        }
+
+        if (fireFX != null)
+        {
+            fireFX.Play(); // Bật Particle System
+        }
     }
 
     void OnDrawGizmosSelected()
