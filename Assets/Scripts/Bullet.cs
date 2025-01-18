@@ -6,6 +6,9 @@ public class Bullet : MonoBehaviour
 {
     private Transform target;
     public ParticleSystem impactFX;
+    public float explosionRadius = 0f;
+    public int damage = 50;
+
     public void Seek(Transform _target)
     {
         target = _target;
@@ -29,6 +32,7 @@ public class Bullet : MonoBehaviour
         }
 
         transform.Translate(dir.normalized * distanceThisFrame, Space.World);
+        transform.LookAt(target);
     }
 
     void HitTarget()
@@ -38,9 +42,42 @@ public class Bullet : MonoBehaviour
             ParticleSystem impactInstance = Instantiate(impactFX, transform.position, transform.rotation);
             Destroy(impactInstance.gameObject, 2f); // Xóa hiệu ứng sau 2 giây
         }
+        if (explosionRadius > 0f)
+        {
+            Explode();
+        }
+        else
+        {
+            Damage(target);
+        }
         
-        Destroy(target.gameObject);
         Destroy(gameObject);
     }
 
+    void Explode()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        foreach (Collider collider in colliders)
+        {
+            if (collider.tag == "Enemy")
+            {
+                Damage(collider.transform);
+            }
+        }
+    }
+
+    void Damage(Transform enemy)
+    {
+        Enemy e = enemy.GetComponent<Enemy>();
+        if (e != null)
+        {
+            e.TakeDamage(damage);
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
+    }
 }

@@ -20,9 +20,9 @@ public class WaySpawner : MonoBehaviour
             countdown = timeBetweenWaves;
         }
         countdown -= Time.deltaTime;
+        countdown = Mathf.Clamp(countdown, 0f, Mathf.Infinity);
 
-        // Cập nhật nội dung TextMeshProUGUI
-        waveCountdownText.text = Mathf.Round(countdown).ToString();
+        waveCountdownText.text = string.Format("{0:00.0}", countdown);
     }
 
     IEnumerator SpawnWave()

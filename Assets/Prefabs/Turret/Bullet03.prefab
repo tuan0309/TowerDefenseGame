@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   impactFX: {fileID: 198049787571439516, guid: 6d074a749488789479e539251fdf184e, type: 3}
+  explosionRadius: 3
+  damage: 40
 --- !u!1 &1513605970140576
 GameObject:
   m_ObjectHideFlags: 0

@@ -118,5 +118,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 538eadf0371b08741b14a015623b1fa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverColor: {r: 1, g: 0, b: 0, a: 0}
+  selectionPrefab: {fileID: 919132149155446097, guid: 7ac6c01f3e014e7439b52ef44b9b8d30, type: 3}
+  turret: {fileID: 0}
   positionOffset: {x: 0, y: 0.5, z: 0}

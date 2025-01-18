@@ -5,18 +5,18 @@ using UnityEngine.EventSystems;
 
 public class Node : MonoBehaviour
 {
-    public Color hoverColor;
-    private Renderer rend;
-    private Color startColor;
-    private GameObject turret;
+    public GameObject turret;
     public Vector3 positionOffset;
     BuildManager buildManager;
 
     void Start()
     {
-        rend = GetComponent<Renderer>();
-        startColor = rend.material.color;
         buildManager = BuildManager.instance;
+    }
+
+    public Vector3 GetBuildPosition()
+    {
+        return transform.position + positionOffset;
     }
 
     void OnMouseDown()
@@ -26,7 +26,7 @@ public class Node : MonoBehaviour
             return;
         }
 
-        if (buildManager.GetTurretToBuild() == null)
+        if (!buildManager.CanBuild)
         {
             return;
         }
@@ -37,26 +37,23 @@ public class Node : MonoBehaviour
             return;
         }
 
-        GameObject turretToBuild = buildManager.GetTurretToBuild();
-        turret = (GameObject)Instantiate(turretToBuild, transform.position + positionOffset, transform.rotation);
+        buildManager.BuildTurretOn(this);
     }
 
     void OnMouseEnter()
     {
-        if (EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current.IsPointerOverGameObject() || !buildManager.CanBuild)
         {
             return;
         }
 
-        if (buildManager.GetTurretToBuild() == null)
-        {
-            return;
-        }
-        rend.material.color = hoverColor;
+        // Sử dụng phương thức để hiển thị Selection
+        buildManager.ShowSelectionAt(GetBuildPosition());
     }
 
     void OnMouseExit()
     {
-        rend.material.color = startColor;
+        // Sử dụng phương thức để ẩn Selection
+        buildManager.HideSelection();
     }
 }

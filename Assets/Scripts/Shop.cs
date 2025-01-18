@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Shop : MonoBehaviour
 {
+    public TurretBlueprint standardTurret;
+    public TurretBlueprint anotherTurret;
     BuildManager buildManager;
+
     void Start()
     {
         buildManager = BuildManager.instance;
@@ -12,11 +15,11 @@ public class Shop : MonoBehaviour
 
     public void SelectStandardTurret()
     {
-        buildManager.SetTurretToBuild(buildManager.standardTurretPrefab);
+        buildManager.SelectTurretToBuild(standardTurret);
     }
 
     public void SelectAnotherTurret()
     {
-        buildManager.SetTurretToBuild(buildManager.anotherTurretPrefab);
+        buildManager.SelectTurretToBuild(anotherTurret);
     }
 }
