@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
+    public bool useLaser = false;
+    public LineRenderer lineRenderer;
     private Transform target;
     public float range = 15f;
     public string enemyTag = "Enemy";
+    public bool canRotate = true;
     public Transform partToRotate;
     public float turnSpeed = 10f;
     public float fireRate = 1f;
     private float fireCountdown = 0f;
     public Transform firePoint;
     public GameObject bulletPrefab;
+    public bool canAnimation = true;
     public Animator animator;
     public ParticleSystem fireFX;
 
@@ -25,20 +29,55 @@ public class Turret : MonoBehaviour
     {
         if (target == null)
         {
+            if (useLaser)
+            {
+                if (lineRenderer.enabled)
+                {
+                    lineRenderer.enabled = false;
+                }
+            }
             return;
         }
 
-        Vector3 dir = target.position - transform.position;
-        Quaternion lookRotation = Quaternion.LookRotation(dir);
-        Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;
-        partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+        LockOnTarget();
 
-        if (fireCountdown <= 0f)
+        if (useLaser)
         {
-            Shoot();
-            fireCountdown = 1f / fireRate;
+            Laser();
         }
-        fireCountdown -= Time.deltaTime;
+        else
+        {
+            if (fireCountdown <= 0f)
+            {
+                Shoot();
+                fireCountdown = 1f / fireRate;
+            }
+            fireCountdown -= Time.deltaTime;
+        }
+    }
+
+    void LockOnTarget()
+    {
+        if (canRotate && partToRotate != null)
+        {
+            Vector3 dir = target.position - transform.position;
+            Quaternion lookRotation = Quaternion.LookRotation(dir);
+            Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;
+            partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+        }
+    }
+
+    void Laser()
+    {
+        if (!lineRenderer.enabled)
+        {
+            lineRenderer.enabled = true;
+        }
+
+        lineRenderer.SetPosition(0, firePoint.position);
+        lineRenderer.SetPosition(1, target.position);
+
+        Vector3 dir = firePoint.position - target.position;
     }
 
     void UpdateTarget()
@@ -70,7 +109,11 @@ public class Turret : MonoBehaviour
 
     void Shoot()
     {
-        animator.SetTrigger("Fire");
+        if (canAnimation)
+        {
+            animator.SetTrigger("Fire");
+        }
+
         GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Bullet bullet = bulletGO.GetComponent<Bullet>();
 

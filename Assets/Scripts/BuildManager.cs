@@ -7,10 +7,11 @@ public class BuildManager : MonoBehaviour
     public static BuildManager instance;
     public GameObject selectionPrefab; // Tham chiếu đến prefab Selection
     private GameObject selectionInstance; // Instance của prefab
-    
+
     // private GameObject turretToBuild;
-    public GameObject standardTurretPrefab;
-    public GameObject anotherTurretPrefab;
+    // public GameObject standardTurretPrefab;
+    // public GameObject anotherTurretPrefab;
+    // public GameObject lazeTurretPrefab;
 
     private void Awake()
     {
